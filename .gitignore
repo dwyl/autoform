@@ -5,5 +5,7 @@
 /.fetch
 erl_crash.dump
 *.ez
+autoform-*.tar
 *.beam
 /config/*.secret.exs
+.elixir_ls
