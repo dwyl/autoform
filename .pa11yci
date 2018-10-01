@@ -1,0 +1,8 @@
+{
+    "urls": [
+      {
+        "url": "http://localhost:4000/users/new",
+        "hideElements": "iframe"
+      }
+    ]
+}
