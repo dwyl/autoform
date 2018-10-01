@@ -29,7 +29,7 @@ defmodule TestAutoformWeb do
   def view do
     quote do
       use Phoenix.View,
-        root: "test/support/test_autoform/lib/test_autoform_web/templates",
+        root: Path.join(unquote(__DIR__), "test_autoform_web/templates"),
         namespace: TestAutoformWeb
 
       # Import convenience functions from controllers

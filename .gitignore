@@ -9,3 +9,6 @@ autoform-*.tar
 *.beam
 /config/*.secret.exs
 .elixir_ls
+
+test/support/test_autoform/_build
+test/support/test_autoform/deps

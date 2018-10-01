@@ -1,5 +1,5 @@
 defmodule Autoform.AutoformView do
-  use Phoenix.View, root: "lib/templates", pattern: "**/*"
+  use Phoenix.View, root: Path.join(__DIR__, "../templates"), pattern: "**/*"
   use Phoenix.HTML
   import Phoenix.HTML.Form
   import Autoform.ErrorHelpers
