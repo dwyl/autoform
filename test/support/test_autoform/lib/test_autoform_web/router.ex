@@ -18,6 +18,7 @@ defmodule TestAutoformWeb.Router do
     pipe_through(:browser)
 
     resources("/users", UserController)
+    resources("/addresses", AddressController)
   end
 
   # Other scopes may use custom stacks.

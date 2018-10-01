@@ -1,4 +1,4 @@
-defmodule AutoformTest do
+defmodule AutoformControllerTest do
   use TestAutoformWeb.ConnCase
   doctest Autoform
 
@@ -20,6 +20,15 @@ defmodule AutoformTest do
                |> html_response(200)
 
       assert response =~ ~s(action="/users")
+    end
+
+    test "Correct types", %{conn: conn} do
+      assert response =
+               conn
+               |> get(user_path(conn, :new))
+               |> html_response(200)
+
+      assert response =~ ~s(type="number")
     end
   end
 
