@@ -1,18 +1,30 @@
 language: elixir
-elixir:
-  - 1.7
-otp_release:
-  - 20.2.4
-env:
-  - MIX_ENV=test
-before-script:
-  - mix deps.get
+matrix:
+  include:
+    - name: tests
+      elixir:
+        - 1.7
+      otp_release:
+        - 20.2.4
+      env:
+        - MIX_ENV=test
+        - MODE=test
+    - name: accessibility
+      elixir:
+        - 1.7
+      otp_release:
+        - 20.2.4
+      sudo: required
+      addons:
+        chrome: stable
+      env:
+        - MODE=accessibility
+before_script:
   - . $HOME/.nvm/nvm.sh
   - nvm install stable
   - nvm use stable
   - npm install -g pa11y-ci
+  - 'if [ $MODE == "accessibility" ]; then cd test/support/test_autoform && mix deps.get; fi'
 script:
-  - mix test
-  - cd test/support/test-autoform
-  - mix deps.get
-  - mix phx.server & pa11y-ci
+  - 'if [ $MODE == "test" ]; then mix test; fi'
+  - 'if [ $MODE == "accessibility" ]; then mix phx.server & pa11y-ci; fi'
