@@ -27,4 +27,4 @@ before_script:
   - 'if [ $MODE == "accessibility" ]; then cd test/support/test_autoform && mix deps.get; fi'
 script:
   - 'if [ $MODE == "test" ]; then mix test; fi'
-  - 'if [ $MODE == "accessibility" ]; then mix phx.server & pa11y-ci; fi'
+  - 'if [ $MODE == "accessibility" ]; then mix phx.server & sleep 5; pa11y-ci; fi'
