@@ -5,5 +5,14 @@ otp_release:
   - 20.2.4
 env:
   - MIX_ENV=test
+before-script:
+  - mix deps.get
+  - . $HOME/.nvm/nvm.sh
+  - nvm install stable
+  - nvm use stable
+  - npm install -g pa11y-ci
 script:
   - mix test
+  - cd test/support/test-autoform
+  - mix deps.get
+  - mix phx.server & pa11y-ci
