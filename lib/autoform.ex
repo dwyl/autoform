@@ -4,12 +4,12 @@ defmodule Autoform do
   """
 
   @doc """
-  Autoform provides a function that can be used in a Phoenix Controller
+  Autoform provides a function that can be used in a Phoenix Controller or View
   to generate a form using an Ecto Schema.
 
   Usage:
 
-  At the top of your controller, call:
+  At the top of your controller or view file, call:
 
       use Autoform
 
@@ -21,8 +21,11 @@ defmodule Autoform do
         Renders a 'new' or 'update' form based on the schema passed to it.
 
         Example:
-
+          In a controller:
             render_autoform(conn, :update, User, user: get_user_from_db())
+
+          In a template:
+            <%= render_autoform(@conn, :new, User, changeset: @changeset) %>
       """
       @spec render_autoform(Plug.Conn.t(), atom, Ecto.Schema.t(), Keyword.t() | map) ::
               Plug.Conn.t()
@@ -38,19 +41,28 @@ defmodule Autoform do
 
         action = path(conn, action, schema_data)
 
-        conn
-        |> put_view(Autoform.AutoformView)
-        |> Phoenix.Controller.render(
-          "form.html",
+        assigns =
           assigns
           |> Enum.into(%{})
           |> Map.put(:action, action)
           |> Map.put(:fields, fields)
-        )
+
+        cond do
+          Regex.match?(~r/.+Controller$/, to_string(__MODULE__)) ->
+            conn
+            |> Phoenix.Controller.put_view(Autoform.AutoformView)
+            |> Phoenix.Controller.render("form.html", assigns)
+
+          Regex.match?(~r/.+View$/, to_string(__MODULE__)) ->
+            Phoenix.View.render(Autoform.AutoformView, "form.html", assigns)
+
+          true ->
+            raise "This function must be called from a Controller or a View"
+        end
       end
 
       defp path(conn, action, opts) do
-        regex = ~r/(?<web_name>.+)\.(?<schema_name>.+)Controller/
+        regex = ~r/(?<web_name>.+)\.(?<schema_name>.+)(?<module_type>Controller|View)/
 
         %{"web_name" => web_name, "schema_name" => schema_name} =
           Regex.named_captures(regex, to_string(__MODULE__))
