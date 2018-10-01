@@ -38,9 +38,10 @@ defmodule Autoform do
 
         action = path(conn, action, schema_data)
 
-        conn
-        |> put_view(Autoform.AutoformView)
-        |> Phoenix.Controller.render(
+        # conn
+        # |> Phoenix.Controller.put_view(Autoform.AutoformView)
+        Phoenix.View.render(
+          Autoform.AutoformView,
           "form.html",
           assigns
           |> Enum.into(%{})
@@ -50,7 +51,7 @@ defmodule Autoform do
       end
 
       defp path(conn, action, opts) do
-        regex = ~r/(?<web_name>.+)\.(?<schema_name>.+)Controller/
+        regex = ~r/(?<web_name>.+)\.(?<schema_name>.+)(Controller|View)/
 
         %{"web_name" => web_name, "schema_name" => schema_name} =
           Regex.named_captures(regex, to_string(__MODULE__))
