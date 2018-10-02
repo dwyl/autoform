@@ -39,6 +39,8 @@ defmodule Autoform do
             :update -> Enum.find(assigns, fn {_k, v} -> match?(v, schema) end)
           end
 
+        required = Map.get(schema.changeset(struct(schema), %{}), :required)
+
         action = path(conn, action, schema_data)
 
         assigns =
@@ -46,6 +48,7 @@ defmodule Autoform do
           |> Enum.into(%{})
           |> Map.put(:action, action)
           |> Map.put(:fields, fields)
+          |> Map.put(:required, required)
 
         cond do
           Regex.match?(~r/.+Controller$/, to_string(__MODULE__)) ->
