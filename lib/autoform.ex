@@ -20,19 +20,31 @@ defmodule Autoform do
       @doc """
         Renders a 'new' or 'update' form based on the schema passed to it.
 
-        Example:
+        ## Examples
+
           In a controller:
-            render_autoform(conn, :update, User, user: get_user_from_db())
+
+            render_autoform(conn, :update, User, assigns: [user: get_user_from_db()])
 
           In a template:
-            <%= render_autoform(@conn, :new, User, changeset: @changeset) %>
+
+            <%= render_autoform(@conn, :new, User, assigns: [changeset: @changeset)], exclude: :date_of_birth %>
+
+        ## Options
+
+          * `:assigns` - The assigns for the form template, for example a changeset for update forms. Will default to empty list
+          * `:exclude` - Any fields in your schema you don't want to display on the form
+
       """
-      @spec render_autoform(Plug.Conn.t(), atom, Ecto.Schema.t(), Keyword.t() | map) ::
-              Plug.Conn.t()
-      def render_autoform(conn, action, schema, assigns) when action in [:update, :create] do
-        fields =
-          schema.__schema__(:fields)
-          |> Enum.reject(&(&1 in [:id, :inserted_at, :updated_at]))
+      @spec render_autoform(
+              Plug.Conn.t(),
+              atom,
+              Ecto.Schema.t(),
+              Keyword.t() | map
+            ) :: Plug.Conn.t() | {atom, String.t()} | no_return()
+      def render_autoform(conn, action, schema, options \\ [])
+          when action in [:update, :create] do
+        assigns = Keyword.get(options, :assigns, [])
 
         {_key, schema_data} =
           case action do
@@ -48,9 +60,9 @@ defmodule Autoform do
           assigns
           |> Enum.into(%{})
           |> Map.put(:action, action)
-          |> Map.put(:fields, fields)
+          |> put_fields(schema, options)
           |> Map.put(:required, required)
-          |> put_associations(conn, schema)
+          |> put_associations(conn, schema, options)
           |> Map.put(
             :schema_name,
             to_string(schema) |> String.downcase() |> String.split(".") |> List.last()
@@ -83,7 +95,17 @@ defmodule Autoform do
         )
       end
 
-      defp put_associations(assigns, conn, schema) do
+      defp put_fields(assigns, schema, options) do
+        excludes = Keyword.get(options, :exclude, []) ++ [:id, :inserted_at, :updated_at]
+
+        fields = schema.__schema__(:fields) |> Enum.reject(&(&1 in excludes))
+
+        Map.put(assigns, :fields, fields)
+      end
+
+      defp put_associations(assigns, conn, schema, options) do
+        excludes = Keyword.get(options, :exclude, [])
+
         repo =
           Module.concat(
             Macro.camelize(to_string(Phoenix.Controller.endpoint_module(conn).config(:otp_app))),
@@ -91,7 +113,9 @@ defmodule Autoform do
           )
 
         associations =
-          Enum.map(schema.__schema__(:associations), fn a ->
+          schema.__schema__(:associations)
+          |> Enum.reject(&(&1 in excludes))
+          |> Enum.map(fn a ->
             assoc = Map.get(schema.__schema__(:association, a), :queryable)
 
             %{
