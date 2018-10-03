@@ -59,6 +59,7 @@ defmodule Autoform do
         assigns =
           assigns
           |> Enum.into(%{})
+          |> Map.put_new(:changeset, schema.changeset(struct(schema), %{}))
           |> Map.put(:action, action)
           |> put_fields(schema, options)
           |> Map.put(:required, required)
