@@ -36,9 +36,9 @@ defmodule Autoform.ErrorHelpers do
     # should be written to the errors.po file. The :count option is
     # set by Ecto and indicates we should also apply plural rules.
     if count = opts[:count] do
-      Gettext.dngettext(ReusableWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(Autoform.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(ReusableWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(Autoform.Gettext, "errors", msg, opts)
     end
   end
 end

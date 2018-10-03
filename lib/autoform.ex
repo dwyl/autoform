@@ -31,7 +31,8 @@ defmodule Autoform do
               Plug.Conn.t()
       def render_autoform(conn, action, schema, assigns) when action in [:update, :create] do
         fields =
-          schema.__schema__(:fields) |> Enum.reject(&(&1 in [:id, :inserted_at, :updated_at]))
+          schema.__schema__(:fields)
+          |> Enum.reject(&(&1 in [:id, :inserted_at, :updated_at]))
 
         {_key, schema_data} =
           case action do
@@ -49,6 +50,11 @@ defmodule Autoform do
           |> Map.put(:action, action)
           |> Map.put(:fields, fields)
           |> Map.put(:required, required)
+          |> put_associations(conn, schema)
+          |> Map.put(
+            :schema_name,
+            to_string(schema) |> String.downcase() |> String.split(".") |> List.last()
+          )
 
         cond do
           Regex.match?(~r/.+Controller$/, to_string(__MODULE__)) ->
@@ -75,6 +81,26 @@ defmodule Autoform do
           String.to_existing_atom(String.downcase(schema_name) <> "_path"),
           [conn, action, opts]
         )
+      end
+
+      defp put_associations(assigns, conn, schema) do
+        repo =
+          Module.concat(
+            Macro.camelize(to_string(Phoenix.Controller.endpoint_module(conn).config(:otp_app))),
+            "Repo"
+          )
+
+        associations =
+          Enum.map(schema.__schema__(:associations), fn a ->
+            assoc = Map.get(schema.__schema__(:association, a), :queryable)
+
+            %{
+              name: a,
+              associations: apply(repo, :all, [assoc])
+            }
+          end)
+
+        Map.put(assigns, :associations, associations)
       end
     end
   end

@@ -11,6 +11,13 @@
       <%= error_tag f, field %>
     </div>
   <% end %>
+  <%= for assoc <- @associations do %>
+    <%= label f, assoc[:name], class: "control-label" %>
+    <%= for a <- assoc[:associations] do %>
+      <input type="checkbox" id="<%=@schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :type))%>" name="<%=@schema_name%>[<%=assoc[:name]%>][<%=String.to_atom(Map.get(a, :type))%>]" class="form-control">
+      <label for="<%=@schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :type))%>"><%= Map.get(a, :type) |> String.capitalize() %></label>
+    <% end %>
+  <% end %>
 
   <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
