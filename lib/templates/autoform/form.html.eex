@@ -12,11 +12,13 @@
     </div>
   <% end %>
   <%= for assoc <- @associations do %>
-    <%= label f, assoc[:name], class: "control-label" %>
-    <%= for a <- assoc[:associations] do %>
-      <input type="checkbox" id="<%=@schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :type))%>" name="<%=@schema_name%>[<%=assoc[:name]%>][<%=String.to_atom(Map.get(a, :type))%>]" class="form-control">
-      <label for="<%=@schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :type))%>"><%= Map.get(a, :type) |> String.capitalize() %></label>
-    <% end %>
+    <div class="form-group <%= assoc[:name] %>-group">
+      <%= label f, assoc[:name], class: "control-label" %>
+      <%= for a <- assoc[:associations] do %>
+        <input type="checkbox" id="<%=@schema_name%>_<%=assoc[:name]%>_<%=String.split(Map.get(a, :display)) |> Enum.join |> Macro.underscore()%>" name="<%=@schema_name%>[<%=assoc[:name]%>][<%=String.to_atom(Map.get(a, :display))%>]" class="form-control">
+        <label for="<%=@schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :display))%>"><%= Map.get(a, :display) |> String.capitalize() %></label>
+      <% end %>
+    </div>
   <% end %>
 
   <div class="form-group">

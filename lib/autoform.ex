@@ -121,11 +121,14 @@ defmodule Autoform do
 
             %{
               name: a,
-              associations: apply(repo, :all, [assoc])
+              associations:
+                Enum.map(apply(repo, :all, [assoc]), fn a ->
+                  Map.put(a, :display, Map.get(a, :name, Map.get(a, :type, "test")))
+                end)
             }
           end)
 
-        Map.put(assigns, :associations, associations)
+        Map.put(assigns, :associations, IO.inspect(associations))
       end
     end
   end
