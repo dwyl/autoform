@@ -33,7 +33,7 @@ defmodule Autoform do
         ## Options
 
           * `:assigns` - The assigns for the form template, for example a changeset for update forms. Will default to empty list
-          * `:exclude` - Any fields in your schema you don't want to display on the form
+          * `:exclude` - A list of any fields in your schema you don't want to display on the form
 
       """
       @spec render_autoform(
@@ -128,7 +128,7 @@ defmodule Autoform do
             }
           end)
 
-        Map.put(assigns, :associations, IO.inspect(associations))
+        Map.put(assigns, :associations, associations)
       end
     end
   end

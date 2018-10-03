@@ -10,6 +10,7 @@ defmodule AutoformControllerTest do
                |> html_response(200)
 
       assert response =~ "age"
+      assert response =~ "address"
       assert response =~ "name"
     end
 
@@ -39,7 +40,7 @@ defmodule AutoformControllerTest do
                |> get(user_path(conn, :edit, 1))
                |> html_response(200)
 
-      assert response =~ "age"
+      assert response =~ "address"
       assert response =~ "name"
     end
 
@@ -50,7 +51,7 @@ defmodule AutoformControllerTest do
                |> html_response(200)
 
       assert response =~ "Test User"
-      assert response =~ "55"
+      assert response =~ "12 Test Road"
     end
 
     test "Correct form action", %{conn: conn} do
@@ -60,6 +61,15 @@ defmodule AutoformControllerTest do
                |> html_response(200)
 
       assert response =~ ~s(action="/users/1")
+    end
+
+    test "Excluded fields do not display", %{conn: conn} do
+      assert response =
+               conn
+               |> get(user_path(conn, :edit, 1))
+               |> html_response(200)
+
+      refute response =~ "age"
     end
   end
 end

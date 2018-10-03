@@ -5,6 +5,7 @@ defmodule TestAutoform.User do
   schema "users" do
     field(:age, :integer)
     field(:name, :string)
+    field(:address, :string)
 
     timestamps()
   end
