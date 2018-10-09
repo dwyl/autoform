@@ -20,5 +20,14 @@ defmodule AutoformViewTest do
 
       assert response =~ "Addresses"
     end
+
+    test "Excluded fields do not display", %{conn: conn} do
+      assert response =
+               conn
+               |> get(address_path(conn, :new))
+               |> html_response(200)
+
+      refute response =~ "Line 1"
+    end
   end
 end
