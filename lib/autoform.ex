@@ -20,7 +20,7 @@ defmodule Autoform do
       import Ecto.Query, only: [from: 2]
 
       @doc """
-        Renders a 'new' or 'update' form based on the schema passed to it.
+        Renders a 'create' or 'update' form based on the schema passed to it.
 
         ## Examples
 
@@ -30,7 +30,7 @@ defmodule Autoform do
 
           In a template:
 
-            <%= render_autoform(@conn, :new, User, assigns: [changeset: @changeset)], exclude: :date_of_birth %>
+            <%= render_autoform(@conn, :create, User, assigns: [changeset: @changeset)], exclude: :date_of_birth %>
 
         ## Options
 
