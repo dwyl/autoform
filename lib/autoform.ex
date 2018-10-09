@@ -98,6 +98,31 @@ defmodule Autoform do
         end
       end
 
+      def custom_render(conn, action, elements) do
+        excludes = [:id, :inserted_at, :updated_at]
+        action = path(conn, action, [])
+        changeset = List.first(elements).changeset(struct(List.first(elements)), %{})
+
+        elements =
+          Enum.map(elements, fn e ->
+            case is_binary(e) do
+              true ->
+                {:html, raw(e)}
+
+              false ->
+                {to_string(e), e.__schema__(:fields) |> Enum.reject(&(&1 in excludes))}
+            end
+          end)
+
+        IO.inspect(elements)
+
+        Phoenix.View.render(Autoform.CustomView, "custom.html", %{
+          elements: elements,
+          changeset: changeset,
+          action: action
+        })
+      end
+
       defp path(conn, action, opts) do
         regex = ~r/(?<web_name>.+)\.(?<schema_name>.+)(?<module_type>Controller|View)/
 

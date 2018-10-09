@@ -1,0 +1,16 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= for {e, fields} <- @elements do %>
+    <%= if e == :html do %>
+      <%= fields %>
+    <%= else %>
+      <h1><%= e %></h1>
+      <%= for field <- fields do %>
+        <div class="form-group">
+          <%= label f, field, class: "control-label" %>
+          <%= input f, field, class: "form-control" %>
+          <%= error_tag f, field %>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
