@@ -7,14 +7,14 @@ defmodule TestAutoformWeb.UserController do
   def new(conn, _params) do
     changeset = User.changeset(%User{}, %{})
 
-    render_autoform(conn, :create, User, changeset: changeset)
+    render_autoform(conn, :create, User, assigns: [changeset: changeset])
   end
 
   def edit(conn, %{"id" => id}) do
-    user = %User{name: "Test User", age: "55", id: id}
+    user = %User{name: "Test User", age: "55", address: "12 Test Road", id: id}
     changeset = User.changeset(user, %{})
 
     conn
-    |> render_autoform(:update, User, user: user, changeset: changeset)
+    |> render_autoform(:update, User, assigns: [user: user, changeset: changeset], exclude: [:age])
   end
 end
