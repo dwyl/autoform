@@ -3,26 +3,25 @@
     <%= if html = Map.get(element, :html) do %>
       <%= html %>
     <% else %>
-      <h1><%= element.name %></h1>
       <%= for field <- element.fields do %>
         <div class="form-group">
-          <%= label f, field, class: "control-label #{if field in element.required do "required" end}" %>
-          <%= input f, field, class: "form-control", required: (field in element.required) %>
+          <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" %>
+          <%= input f, field, element.schema_name, class: "form-control", required: (field in element.required) %>
           <%= error_tag f, field %>
         </div>
       <% end %>
       <%= for assoc <- element.associations do %>
       <div class="form-group <%= assoc[:name] %>-group">
-        <%= label f, assoc[:name], class: "control-label" %>
+        <%= label String.to_existing_atom(element.schema_name), assoc[:name], class: "control-label" %>
         <%= for a <- assoc[:associations] do %>
           <input 
             type="checkbox" 
-            id="<%=element.name%>_<%=assoc[:name]%>_<%=String.split(Map.get(a, :display)) |> Enum.join |> Macro.underscore()%>"
-            name="<%=element.name%>[<%=assoc[:name]%>][<%=String.to_atom(Map.get(a, :display))%>]" 
+            id="<%=element.schema_name%>_<%=assoc[:name]%>_<%=String.split(Map.get(a, :display)) |> Enum.join |> Macro.underscore()%>"
+            name="<%=element.schema_name%>[<%=assoc[:name]%>][<%=String.to_atom(Map.get(a, :display))%>]" 
             class="form-control"
             <%= if Map.get(assoc.loaded_associations, assoc[:name]) |> Enum.find(fn l -> Map.get(l, :name) == Map.get(a, :display) || Map.get(l, :type) == Map.get(a, :display) end) do "checked" end%>
             >
-          <label for="<%=element.name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :display))%>"><%= Map.get(a, :display) |> String.capitalize() %></label>
+          <label for="<%=element.schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :display))%>"><%= Map.get(a, :display) |> String.capitalize() %></label>
         <% end %>
       </div>
     <% end %>

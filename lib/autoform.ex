@@ -81,10 +81,7 @@ defmodule Autoform do
           |> (fn a ->
                 Map.put(a, :associations, associations(conn, schema, a.changeset, options))
               end).()
-          |> Map.put(
-            :schema_name,
-            to_string(schema) |> String.downcase() |> String.split(".") |> List.last()
-          )
+          |> Map.put(:schema_name, schema_name(schema))
       end
 
       def custom_render(conn, action, elements, options \\ []) do
@@ -96,10 +93,10 @@ defmodule Autoform do
 
               false ->
                 %{
-                  name: to_string(e),
                   fields: fields(e, options),
                   required: Map.get(e.changeset(struct(e), %{}), :required),
-                  associations: associations(conn, e, e.changeset(struct(e), %{}), options)
+                  associations: associations(conn, e, e.changeset(struct(e), %{}), options),
+                  schema_name: schema_name(e)
                 }
             end
           end)
@@ -190,6 +187,10 @@ defmodule Autoform do
           end)
 
         associations
+      end
+
+      defp schema_name(schema) do
+        schema |> to_string() |> String.downcase() |> String.split(".") |> List.last()
       end
     end
   end
