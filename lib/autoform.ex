@@ -6,7 +6,7 @@ defmodule Autoform do
   """
 
   @doc """
-  Autoform provides a function that can be used in a Phoenix Controller or View
+  Autoform provides functions that can be used in a Phoenix Controller or View
   to generate a form using an Ecto Schema.
 
   Usage:
@@ -15,7 +15,7 @@ defmodule Autoform do
 
       use Autoform
 
-  then, when you want to render your form, call render_autoform/4
+  then, when you want to render your form, call `render_autoform`/4, or `custom_render_autoform/4`
   """
   defmacro __using__(_opts) do
     quote location: :keep do
@@ -23,6 +23,7 @@ defmodule Autoform do
 
       @doc """
         Renders a 'create' or 'update' form based on the schema passed to it.
+        Can be used in a Phoenix Controller or View.
 
         ## Examples
 
@@ -32,7 +33,7 @@ defmodule Autoform do
 
           In a template:
 
-            <%= render_autoform(@conn, :create, User, assigns: [changeset: @changeset)], exclude: :date_of_birth %>
+            <%= render_autoform(@conn, :create, User, assigns: [changeset: @changeset)], exclude: [:date_of_birth] %>
 
         ## Options
 
@@ -44,10 +45,10 @@ defmodule Autoform do
       """
       @spec render_autoform(
               Plug.Conn.t(),
-              atom,
+              atom(),
               Ecto.Schema.t(),
-              Keyword.t() | map
-            ) :: Plug.Conn.t() | {atom, String.t()} | no_return()
+              Keyword.t() | map()
+            ) :: Plug.Conn.t() | {atom(), String.t()} | no_return()
       def render_autoform(conn, action, schema, options \\ [])
           when action in [:update, :create] do
         assigns = create_assigns(conn, action, schema, options)
@@ -84,17 +85,50 @@ defmodule Autoform do
           |> Map.put(:schema_name, schema_name(schema))
       end
 
-      def custom_render(conn, action, elements, options \\ []) do
-        assigns =
+      @doc """
+        Takes a list of Ecto Schemas, HTML strings or a tuple of Ecto Schemas and options, and renders a form using them.
+
+        ## Examples
+
+            <%= custom_render_autoform(@conn, :create, [
+              User,
+              "<h1>Title goes here</h1>",
+              {Address, exclude: [:line_2]}
+            ], assigns: [changeset: @changeset)], exclude: [:entry_id] %>
+
+        ## Schema Options
+
+        Pass these as the second element in a tuple, where the schema is the first.
+
+          * `:exclude` - A list of any fields from this schema you don't want to display.
+
+        ## Global Options
+
+        Pass these as the final argument to `custom_render_autoform`
+
+          * `:exclude` - A list of any fields in any of your schemas you don't want to display on the form
+          * `:update_field` - The field from your schema you want to use in your update path (/users/some-id), defaults to id
+          * `:assoc_query` - An ecto query you want to use when loading your associations
+          * `:path` - The endpoint you want your form to post to. Defaults using the calling modules schema name plus :update_field. If you are rendering multiple schemas, you will almost certainly need to use this field
+
+      """
+      @spec custom_render_autoform(
+              Plug.Conn.t(),
+              atom(),
+              list(Ecto.Schema.t() | tuple() | String.t()),
+              Keyword.t() | map()
+            ) :: {atom(), String.t()} | no_return()
+      def custom_render_autoform(conn, action, elements, options \\ []) do
+        element_assigns =
           Enum.map(elements, fn e ->
             case is_binary(e) do
               true ->
-                %{html: raw(e)}
+                %{html: Phoenix.HTML.raw(e)}
 
               false ->
                 {schema, excludes} =
                   case e do
-                    {schema, options} -> {schema, Keyword.get(options, :exclude, [])}
+                    {schema, opts} -> {schema, Keyword.get(opts, :exclude, [])}
                     _ -> {e, []}
                   end
 
@@ -102,7 +136,9 @@ defmodule Autoform do
                   fields:
                     fields(
                       schema,
-                      Keyword.update(options, :exclude, [], fn v -> v ++ excludes end)
+                      Keyword.update(options, :exclude, excludes, fn v ->
+                        v ++ excludes
+                      end)
                     ),
                   required: Map.get(schema.changeset(struct(schema), %{}), :required),
                   associations:
@@ -117,13 +153,20 @@ defmodule Autoform do
             end
           end)
 
+        first_schema =
+          Enum.find(elements, fn e -> not is_binary(e) end)
+          |> case do
+            {schema, _} -> schema
+            schema -> schema
+          end
+
         Phoenix.View.render(
           Autoform.CustomView,
           "custom.html",
           %{
-            elements: assigns,
-            changeset: List.first(elements).changeset(struct(List.first(elements)), %{}),
-            action: Keyword.get(options, :path, path(conn, action, List.first(elements), options))
+            elements: element_assigns,
+            changeset: first_schema.changeset(struct(first_schema), %{}),
+            action: Keyword.get(options, :path, path(conn, action, first_schema, options))
           }
         )
       end
