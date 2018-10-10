@@ -92,11 +92,27 @@ defmodule Autoform do
                 %{html: raw(e)}
 
               false ->
+                {schema, excludes} =
+                  case e do
+                    {schema, options} -> {schema, Keyword.get(options, :exclude, [])}
+                    _ -> {e, []}
+                  end
+
                 %{
-                  fields: fields(e, options),
-                  required: Map.get(e.changeset(struct(e), %{}), :required),
-                  associations: associations(conn, e, e.changeset(struct(e), %{}), options),
-                  schema_name: schema_name(e)
+                  fields:
+                    fields(
+                      schema,
+                      Keyword.update(options, :exclude, [], fn v -> v ++ excludes end)
+                    ),
+                  required: Map.get(schema.changeset(struct(schema), %{}), :required),
+                  associations:
+                    associations(
+                      conn,
+                      schema,
+                      schema.changeset(struct(schema), %{}),
+                      Keyword.update(options, :exclude, [], fn v -> v ++ excludes end)
+                    ),
+                  schema_name: schema_name(schema)
                 }
             end
           end)
@@ -151,6 +167,8 @@ defmodule Autoform do
       end
 
       defp associations(conn, schema, changeset, options) do
+        excludes = Keyword.get(options, :exclude, []) ++ unquote(@excludes)
+
         assoc_query =
           Keyword.get(options, :assoc_query, fn schema -> from(s in schema, select: s) end)
 
@@ -162,7 +180,7 @@ defmodule Autoform do
 
         associations =
           schema.__schema__(:associations)
-          |> Enum.reject(&(&1 in unquote(@excludes)))
+          |> Enum.reject(&(&1 in excludes))
           |> Enum.map(fn a ->
             assoc = Map.get(schema.__schema__(:association, a), :queryable)
 
