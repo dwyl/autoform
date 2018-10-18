@@ -1,0 +1,7 @@
+<h1>Custom Form</h1>
+
+<%= custom_render_autoform(@conn, :create, [
+  TestAutoform.Address,
+  "<h1>Between address and user</h1>",
+  {TestAutoform.User, exclude: [:age]}
+], path: "/endpoint") %>

@@ -3,6 +3,10 @@
       {
         "url": "http://localhost:4000/users/new",
         "hideElements": "iframe"
+      },
+      {
+        "url": "http://localhost:4000/custom/new",
+        "hideElements": "iframe"
       }
     ]
 }
