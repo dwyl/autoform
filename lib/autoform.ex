@@ -93,7 +93,7 @@ defmodule Autoform do
             <%= custom_render_autoform(@conn, :create, [
               User,
               "<h1>Title goes here</h1>",
-              {Address, exclude: [:line_2]}
+              {Address, exclude: [:line_2], custom_labels: %{line_1: "Street Name"}}
             ], assigns: [changeset: @changeset)], exclude: [:entry_id] %>
 
         ## Schema Options
@@ -101,6 +101,7 @@ defmodule Autoform do
         Pass these as the second element in a tuple, where the schema is the first.
 
           * `:exclude` - A list of any fields from this schema you don't want to display.
+          * `:custom_labels` - A map where the key is your field name, and the value is what you want to display as the label for that field.
 
         ## Global Options
 
@@ -126,11 +127,14 @@ defmodule Autoform do
                 %{html: Phoenix.HTML.raw(e)}
 
               false ->
-                {schema, excludes} =
+                {schema, schema_options} =
                   case e do
-                    {schema, opts} -> {schema, Keyword.get(opts, :exclude, [])}
+                    {schema, opts} -> {schema, opts}
                     _ -> {e, []}
                   end
+
+                excludes = Keyword.get(schema_options, :exclude, [])
+                custom_labels = Keyword.get(schema_options, :custom_labels, %{})
 
                 %{
                   fields:
@@ -148,7 +152,8 @@ defmodule Autoform do
                       schema.changeset(struct(schema), %{}),
                       Keyword.update(options, :exclude, [], fn v -> v ++ excludes end)
                     ),
-                  schema_name: schema_name(schema)
+                  schema_name: schema_name(schema),
+                  custom_labels: custom_labels
                 }
             end
           end)
