@@ -20,7 +20,7 @@
           id="<%=@schema_name%>_<%=assoc[:name]%>_<%=String.split(Map.get(a, :display)) |> Enum.join |> Macro.underscore()%>"
           name="<%=@schema_name%>[<%=assoc[:name]%>][<%=String.to_atom(Map.get(a, :display))%>]" 
           class="form-control"
-          <%= if Map.get(assoc.loaded_associations, assoc[:name]) |> Enum.find(fn l -> Map.get(l, :name) == Map.get(a, :display) || Map.get(l, :type) == Map.get(a, :display) end) do "checked" end%>
+          <%= if (Map.get(assoc.loaded_associations, assoc[:name]) || []) |> Enum.find(fn l -> Map.get(l, :name) == Map.get(a, :display) || Map.get(l, :type) == Map.get(a, :display) end) do "checked" end%>
           >
         <label for="<%=@schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :display))%>"><%= Map.get(a, :display) |> String.capitalize() %></label>
       <% end %>
