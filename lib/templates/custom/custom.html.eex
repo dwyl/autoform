@@ -6,7 +6,8 @@
       <%= for field <- element.fields do %>
         <div class="form-group">
           <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %>
-            <%= if Map.get(element.custom_labels, field) do Map.get(element.custom_labels, field) else humanize(field) end %>
+            <% custom_label = Map.get(element.custom_labels, field) %>
+            <%= custom_label || humanize(field) %>
           <% end %>
           <%= input f, field, element.schema_name, class: "form-control", required: (field in element.required) %>
           <%= error_tag f, field %>
