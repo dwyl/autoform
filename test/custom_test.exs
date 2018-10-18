@@ -72,5 +72,15 @@ defmodule CustomTest do
 
       assert response =~ "/custom"
     end
+
+    test "labels are replaced with custom options", %{conn: conn} do
+      assert response =
+               conn
+               |> get(custom_path(conn, :new))
+               |> html_response(200)
+
+      assert response =~ "Years on Earth"
+      refute response =~ "Age"
+    end
   end
 end

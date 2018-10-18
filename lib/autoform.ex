@@ -126,11 +126,14 @@ defmodule Autoform do
                 %{html: Phoenix.HTML.raw(e)}
 
               false ->
-                {schema, excludes} =
+                {schema, schema_options} =
                   case e do
-                    {schema, opts} -> {schema, Keyword.get(opts, :exclude, [])}
+                    {schema, opts} -> {schema, opts}
                     _ -> {e, []}
                   end
+
+                excludes = Keyword.get(schema_options, :exclude, [])
+                custom_labels = Keyword.get(schema_options, :custom_labels, %{})
 
                 %{
                   fields:
@@ -148,7 +151,8 @@ defmodule Autoform do
                       schema.changeset(struct(schema), %{}),
                       Keyword.update(options, :exclude, [], fn v -> v ++ excludes end)
                     ),
-                  schema_name: schema_name(schema)
+                  schema_name: schema_name(schema),
+                  custom_labels: custom_labels
                 }
             end
           end)

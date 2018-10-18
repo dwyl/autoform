@@ -3,5 +3,6 @@
 <%= custom_render_autoform(@conn, :create, [
   TestAutoform.Address,
   "<h1>Between address and user</h1>",
-  {TestAutoform.User, exclude: [:age]}
+  {TestAutoform.User, exclude: [:age]},
+  {TestAutoform.User, exclude: [:name, :address], custom_labels: %{age: "Years on Earth"}}
 ], path: "/endpoint") %>
