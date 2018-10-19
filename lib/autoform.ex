@@ -102,6 +102,7 @@ defmodule Autoform do
 
           * `:exclude` - A list of any fields from this schema you don't want to display.
           * `:custom_labels` - A map where the key is your field name, and the value is what you want to display as the label for that field.
+          * `:input_first` - A list of any fields from this schema where you would like to display the input followed by the label.
 
         ## Global Options
 
@@ -135,6 +136,7 @@ defmodule Autoform do
 
                 excludes = Keyword.get(schema_options, :exclude, [])
                 custom_labels = Keyword.get(schema_options, :custom_labels, %{})
+                input_first = Keyword.get(schema_options, :input_first, [])
 
                 %{
                   fields:
@@ -153,7 +155,8 @@ defmodule Autoform do
                       Keyword.update(options, :exclude, [], fn v -> v ++ excludes end)
                     ),
                   schema_name: schema_name(schema),
-                  custom_labels: custom_labels
+                  custom_labels: custom_labels,
+                  input_first: input_first
                 }
             end
           end)

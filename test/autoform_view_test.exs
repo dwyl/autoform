@@ -29,5 +29,14 @@ defmodule AutoformViewTest do
 
       refute response =~ "Line 1"
     end
+
+    test "Reverse order of :line_1 input box and label", %{conn: conn} do
+      response = conn |> get(address_path(conn, :index)) |> html_response(200)
+      [h, t] = Regex.split(~r{id=\"address_line_1\"}, response)
+
+      assert response =~ "id=\"address_line_1\""
+      refute h =~ "for=\"address_line_1\""
+      assert t =~ "for=\"address_line_1\""
+    end
   end
 end
