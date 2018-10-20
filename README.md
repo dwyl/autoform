@@ -22,9 +22,9 @@ use Autoform
 
 to the top of the module you want to use it in.
 
-Then, you'll have the `render_autoform/4` function available in the controller, or the template that corresponds to the view.
+You'll be able to call either `render_autoform/4` or `custom_render_autoform/4` in the controller, or the template that corresponds to the view.
 
-Call the function in your controller with:
+Call `render_autoform` in your controller with:
 
 ``` elixir
 render_autoform(conn, :update, User, assigns: [user: get_user_from_db()])
@@ -32,8 +32,16 @@ render_autoform(conn, :update, User, assigns: [user: get_user_from_db()])
 
 or in your template:
 ``` elixir
-<%= render_autoform(@conn, :new, User, assigns: [changeset: @changeset)], exclude: :date_of_birth %>
+<%= render_autoform(@conn, :create, User, assigns: [changeset: @changeset)], exclude: :date_of_birth %>
 ```
+
+`custom_render_autoform` is called in a very similar way, but can be given extra arguments which will change the generated form.
+
+An example of this in a template:
+``` elixir
+<%= custom_render_autoform(@conn, :create, [{User, custom_labels: %{date_of_birth: "DOB"}}], assigns: [changeset: @changeset)] %>
+```
+This will now render the form with a custom label for the `date_of_birth` input field.
 
 ### Arguments
 
@@ -46,6 +54,25 @@ render_autoform(conn, action, schema, options)
 - action : Either `:update` or `:create`. This will be used to create the endpoint for your form.
 
 - schema : Your Ecto schema
+
+- options : A list of options you can use to customise your forms.
+  - `:assigns` - The assigns for the form template, for example a changeset for update forms. Will default to empty list
+  - `:exclude` - A list of any fields in your schema you don't want to display on the form
+  -  `:update_field` - The field from your schema you want to use in your update path (/users/some-id), defaults to `id`
+  - `:assoc_query` - An ecto query you want to use when loading your associations
+
+``` elixir
+custom_render_autoform(conn, action, [{schema, opts}], options)
+```
+
+- conn : Your Phoenix Plug.Conn
+
+- action : Either `:update` or `:create`. This will be used to create the endpoint for your form.
+
+- list {schema, opts} : A list of tuples which contain your Ecto schemas and the options for the form.
+  - opts include:
+    - `:custom_labels` - A map with a key of the field from your schema and a value of text you would like to label the input with.
+    - `:input_first` - A list of fields where you would like to display the label followed by the input.
 
 - options : A list of options you can use to customise your forms.
   - `:assigns` - The assigns for the form template, for example a changeset for update forms. Will default to empty list
