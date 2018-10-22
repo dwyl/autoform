@@ -5,17 +5,14 @@
     <% else %>
       <%= for field <- element.fields do %>
         <div class="form-group">
-          <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %>
-            <% custom_label = Map.get(element.custom_labels, field) %>
-            <%= custom_label || humanize(field) %>
-          <% end %>
+          <%= get_label element, field %>
           <%= input f, field, element.schema_name, class: "form-control", required: (field in element.required) %>
           <%= error_tag f, field %>
         </div>
       <% end %>
       <%= for assoc <- element.associations do %>
         <div class="form-group <%= assoc[:name] %>-group">
-          <%= label String.to_existing_atom(element.schema_name), assoc[:name], class: "control-label" %>
+          <%= get_label element, assoc[:name] %>
           <%= for a <- assoc[:associations] do %>
             <input 
               type="checkbox" 
