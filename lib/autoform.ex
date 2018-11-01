@@ -171,11 +171,12 @@ defmodule Autoform do
         Phoenix.View.render(
           Autoform.CustomView,
           "custom.html",
-          %{
+          Keyword.get(options, :assigns, %{})
+          |> Enum.into(%{})
+          |> Map.merge(%{
             elements: element_assigns,
-            changeset: first_schema.changeset(struct(first_schema), %{}),
             action: Keyword.get(options, :path, path(conn, action, first_schema, options))
-          }
+          })
         )
       end
 
