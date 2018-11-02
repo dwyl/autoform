@@ -39,7 +39,7 @@ or in your template:
 
 An example of this in a template:
 ``` elixir
-<%= custom_render_autoform(@conn, :create, [{User, custom_labels: %{date_of_birth: "DOB"}}], assigns: [changeset: @changeset)] %>
+<%= custom_render_autoform(@conn, :create, [{User, custom_labels: %{date_of_birth: "DOB"}, input_first: [:date_of_birth]}], assigns: [changeset: @changeset)] %>
 ```
 This will now render the form with a custom label for the `date_of_birth` input field.
 
