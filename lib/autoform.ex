@@ -96,6 +96,9 @@ defmodule Autoform do
               {Address, exclude: [:line_2], custom_labels: %{line_1: "Street Name"}}
             ], assigns: [changeset: @changeset)], exclude: [:entry_id] %>
 
+            <%= custom_render_autoform(@conn, :update, [{Address, input_first: [:line_1, :postcode],}], assigns: [changeset: @changeset)] %>
+
+
         ## Schema Options
 
         Pass these as the second element in a tuple, where the schema is the first.
