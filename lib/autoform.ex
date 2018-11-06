@@ -172,7 +172,8 @@ defmodule Autoform do
           Autoform.CustomView,
           "custom.html",
           Keyword.get(options, :assigns, %{})
-          |> Enum.into(%{})
+          |> Map.new()
+          |> Map.put_new(:changeset, first_schema.changeset(struct(first_schema), %{}))
           |> Map.merge(%{
             elements: element_assigns,
             action: Keyword.get(options, :path, path(conn, action, first_schema, options))
