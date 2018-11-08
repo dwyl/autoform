@@ -154,7 +154,11 @@ defmodule Autoform do
                     associations(
                       conn,
                       schema,
-                      schema.changeset(struct(schema), %{}),
+                      Keyword.get(
+                        Keyword.get(options, :assigns, []),
+                        :changeset,
+                        schema.changeset(struct(schema), %{})
+                      ),
                       Keyword.update(options, :exclude, [], fn v -> v ++ excludes end)
                     ),
                   schema_name: schema_name(schema),
@@ -174,7 +178,7 @@ defmodule Autoform do
         Phoenix.View.render(
           Autoform.CustomView,
           "custom.html",
-          Keyword.get(options, :assigns, %{})
+          Keyword.get(options, :assigns, [])
           |> Map.new()
           |> Map.put_new(:changeset, first_schema.changeset(struct(first_schema), %{}))
           |> Map.merge(%{
