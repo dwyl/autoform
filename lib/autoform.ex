@@ -43,6 +43,21 @@ defmodule Autoform do
           * `:assoc_query` - An ecto query you want to use when loading your associations
 
       """
+
+      @spec autoform_render(
+              Plug.Conn.t(),
+              atom(),
+              Ecto.Schema.t() | list(Ecto.Schema.t() | tuple() | String.t()),
+              Keyword.t() | map()
+            ) :: Plug.Conn.t() | {atom(), String.t()} | no_return()
+      def autoform_render(conn, action, elements, options \\ []) when is_list(elements) do
+        custom_render_autoform(conn, action, elements, options)
+      end
+
+      def autoform_render(conn, action, schema, options \\ []) do
+        render_autoform(conn, action, schema, options)
+      end
+
       @spec render_autoform(
               Plug.Conn.t(),
               atom(),
