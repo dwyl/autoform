@@ -247,6 +247,7 @@ defmodule Autoform do
               end
 
             %{
+              cardinality: Map.get(schema.__schema__(:association, a), :cardinality),
               name: a,
               associations:
                 Enum.map(
