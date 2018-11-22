@@ -24,6 +24,7 @@
           >
         <label for="<%=@schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :display))%>"><%= Map.get(a, :display) |> String.capitalize() %></label>
       <% end %>
+      <%= error_tag f, assoc[:name] %>
     </div>
   <% end %>
 
