@@ -223,7 +223,8 @@ defmodule Autoform do
       defp fields(schema, options) do
         excludes = Keyword.get(options, :exclude, []) ++ unquote(@excludes)
 
-        schema.__schema__(:fields) |> Enum.reject(&(&1 in excludes))
+        schema.__schema__(:fields)
+        |> Enum.reject(&(&1 in excludes))
       end
 
       defp associations(conn, schema, changeset, options) do

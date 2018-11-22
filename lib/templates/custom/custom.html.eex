@@ -8,15 +8,9 @@
           <%= if Map.has_key?(element, :input_first) && Enum.any?(element.input_first, &(&1 == field)) do %>
             <%= input f, field, element.schema_name, class: "form-control", required: (field in element.required), value: Map.get(@changeset.data, field) %>
             <%= error_tag f, field %>
-            <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %>
-              <% custom_label = Map.get(element.custom_labels, field) %>
-              <%= custom_label || humanize(field) %>
-            <% end %>
+            <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %><%=Map.get(element.custom_labels, field, humanize(field))%><% end %>
           <% else %>
-            <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %>
-              <% custom_label = Map.get(element.custom_labels, field) %>
-              <%= custom_label || humanize(field) %>
-            <% end %>
+            <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %><%=Map.get(element.custom_labels, field, humanize(field))%><% end %>
             <%= input f, field, element.schema_name, class: "form-control", required: (field in element.required), value: Map.get(@changeset.data, field) %>
             <%= error_tag f, field %>
           <% end %>
@@ -24,7 +18,7 @@
       <% end %>
       <%= for assoc <- element.associations do %>
         <div class="form-group <%= assoc[:name] %>-group">
-          <%= label String.to_existing_atom(element.schema_name), assoc[:name], class: "control-label" %>
+          <%= label String.to_existing_atom(element.schema_name), assoc[:name], class: "control-label #{if assoc[:name] in element.required do "required" end}" %>
           <%= if assoc[:cardinality] == :one do %>
             <select name="<%=element.schema_name%>[<%=assoc[:name]%>]">
               <%= for a <- assoc[:associations] do %>
@@ -47,6 +41,7 @@
               <label for="<%=element.schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :display))%>"><%= Map.get(a, :display) |> String.capitalize() %></label>
             <% end %>
           <% end %>
+          <%= error_tag f, assoc[:name] %>
         </div>
       <% end %>
     <% end %>
