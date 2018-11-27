@@ -79,3 +79,11 @@ custom_render_autoform(conn, action, [{schema, opts}], options)
   - `:exclude` - A list of any fields in your schema you don't want to display on the form
   -  `:update_field` - The field from your schema you want to use in your update path (/users/some-id), defaults to `id`
   - `:assoc_query` - An ecto query you want to use when loading your associations
+
+### Associations
+
+`:many_to_many` associations are rendered as checkboxes.
+
+`:belongs_to` associations are rendered as a `select` element.
+
+If you don't want the associations to be rendered in your form, you can add them to your exclude list (see options `above`).

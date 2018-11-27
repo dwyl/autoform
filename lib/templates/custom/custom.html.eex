@@ -6,35 +6,42 @@
       <%= for field <- element.fields do %>
         <div class="form-group">
           <%= if Map.has_key?(element, :input_first) && Enum.any?(element.input_first, &(&1 == field)) do %>
-            <%= input f, field, element.schema_name, class: "form-control", required: (field in element.required) %>
+            <%= input f, field, element.schema_name, class: "form-control", required: (field in element.required), value: Map.get(@changeset.data, field) %>
             <%= error_tag f, field %>
-            <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %>
-              <% custom_label = Map.get(element.custom_labels, field) %>
-              <%= custom_label || humanize(field) %>
-            <% end %>
+            <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %><%=Map.get(element.custom_labels, field, humanize(field))%><% end %>
           <% else %>
-            <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %>
-              <% custom_label = Map.get(element.custom_labels, field) %>
-              <%= custom_label || humanize(field) %>
-            <% end %>
-            <%= input f, field, element.schema_name, class: "form-control", required: (field in element.required) %>
+            <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %><%=Map.get(element.custom_labels, field, humanize(field))%><% end %>
+            <%= input f, field, element.schema_name, class: "form-control", required: (field in element.required), value: Map.get(@changeset.data, field) %>
             <%= error_tag f, field %>
           <% end %>
         </div>
       <% end %>
       <%= for assoc <- element.associations do %>
         <div class="form-group <%= assoc[:name] %>-group">
-          <%= label String.to_existing_atom(element.schema_name), assoc[:name], class: "control-label" %>
-          <%= for a <- assoc[:associations] do %>
-            <input
-              type="checkbox"
-              id="<%=element.schema_name%>_<%=assoc[:name]%>_<%=String.split(Map.get(a, :display)) |> Enum.join |> Macro.underscore()%>"
-              name="<%=element.schema_name%>[<%=assoc[:name]%>][<%=String.to_atom(Map.get(a, :display))%>]"
-              class="form-control"
-              <%= if (Map.get(assoc.loaded_associations, assoc[:name]) || []) |> Enum.find(fn l -> Map.get(l, :name) == Map.get(a, :display) || Map.get(l, :type) == Map.get(a, :display) end) do "checked" end%>
-              >
-            <label for="<%=element.schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :display))%>"><%= Map.get(a, :display) |> String.capitalize() %></label>
+          <%= label String.to_existing_atom(element.schema_name), assoc[:name], class: "control-label #{if assoc[:name] in element.required do "required" end}" %>
+          <%= if assoc[:cardinality] == :one do %>
+            <select name="<%=element.schema_name%>[<%=assoc[:name]%>]">
+              <%= for a <- assoc[:associations] do %>
+                <option value="<%=String.to_atom(Map.get(a, :display))%>"
+                  <%= if (Map.get(assoc.loaded_associations, assoc[:name]) || %{}) |> Map.get(:name) == Map.get(a, :display) do "selected" end%>
+                >
+                  <%= Map.get(a, :display) |> String.capitalize() %>
+                </option>
+              <% end %>
+            </select>
+          <%= else %>
+            <%= for a <- assoc[:associations] do %>
+              <input
+                type="checkbox"
+                id="<%=element.schema_name%>_<%=assoc[:name]%>_<%=String.split(Map.get(a, :display)) |> Enum.join |> Macro.underscore()%>"
+                name="<%=element.schema_name%>[<%=assoc[:name]%>][<%=String.to_atom(Map.get(a, :display))%>]"
+                class="form-control"
+                <%= if (Map.get(assoc.loaded_associations, assoc[:name]) || []) |> Enum.find(fn l -> Map.get(l, :name) == Map.get(a, :display) || Map.get(l, :type) == Map.get(a, :display) end) do "checked" end%>
+                >
+              <label for="<%=element.schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :display))%>"><%= Map.get(a, :display) |> String.capitalize() %></label>
+            <% end %>
           <% end %>
+          <%= error_tag f, assoc[:name] %>
         </div>
       <% end %>
     <% end %>

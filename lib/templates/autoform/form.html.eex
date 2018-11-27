@@ -13,7 +13,7 @@
   <% end %>
   <%= for assoc <- @associations do %>
     <div class="form-group <%= assoc[:name] %>-group">
-      <%= label f, assoc[:name], class: "control-label" %>
+      <%= label f, assoc[:name], class: "control-label #{if assoc[:name] in @required do "required" end}" %>
       <%= for a <- assoc[:associations] do %>
         <input 
           type="checkbox" 
@@ -24,6 +24,7 @@
           >
         <label for="<%=@schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :display))%>"><%= Map.get(a, :display) |> String.capitalize() %></label>
       <% end %>
+      <%= error_tag f, assoc[:name] %>
     </div>
   <% end %>
 
