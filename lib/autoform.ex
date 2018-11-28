@@ -163,7 +163,8 @@ defmodule Autoform do
                     ),
                   schema_name: schema_name(schema),
                   custom_labels: custom_labels,
-                  input_first: input_first
+                  input_first: input_first,
+                  schema: schema
                 }
             end
           end)
