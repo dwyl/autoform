@@ -29,7 +29,7 @@
                 </option>
               <% end %>
             </select>
-          <%= else %>
+          <% else %>
             <%= for a <- assoc[:associations] do %>
               <input
                 type="checkbox"

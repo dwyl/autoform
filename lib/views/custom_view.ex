@@ -7,13 +7,9 @@ defmodule Autoform.CustomView do
   def input(form, field, name, schema, opts) do
     type =
       with "Elixir.Fields." <> field_type <- to_string(schema.__schema__(:type, field)),
-           true <-
-             function_exported?(
-               Module.concat(Fields, String.to_existing_atom(field_type)),
-               :input_type,
-               0
-             ) do
-        Module.concat(Fields, String.to_existing_atom(field_type)).input_type
+           {:module, module} <- Code.ensure_loaded(Module.concat(Fields, field_type)),
+           true <- function_exported?(module, :input_type, 0) do
+        Module.concat(Fields, field_type).input_type
       else
         _ ->
           Phoenix.HTML.Form.input_type(form, field)
