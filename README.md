@@ -87,3 +87,11 @@ custom_render_autoform(conn, action, [{schema, opts}], options)
 `:belongs_to` associations are rendered as a `select` element.
 
 If you don't want the associations to be rendered in your form, you can add them to your exclude list (see options `above`).
+
+### Fields
+
+This module can be used in conjuction with https://github.com/dwyl/fields.
+
+If you use one of these Fields in your schema, and that field has an `input_type/0` callback. The result of that callback will be the input type that is rendered in your form.
+
+For example, the field `Fields.DescriptionPlaintextUnlimited` returns `:textarea` from its `input_type` function, so `autoform` will render a textarea using [`Phoenix.HTML.Form.textarea/3`](https://hexdocs.pm/phoenix_html/Phoenix.HTML.Form.html#textarea/3)

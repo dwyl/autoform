@@ -82,5 +82,14 @@ defmodule CustomTest do
       assert response =~ "Years on Earth"
       refute response =~ "Age"
     end
+
+    test "Correct input type rendered", %{conn: conn} do
+      assert response =
+               conn
+               |> get(custom_path(conn, :new))
+               |> html_response(200)
+
+      assert response =~ "textarea"
+    end
   end
 end

@@ -6,6 +6,7 @@ defmodule TestAutoform.User do
     field(:age, :integer)
     field(:name, :string)
     field(:address, :string)
+    field(:biography, Fields.DescriptionPlaintextUnlimited)
 
     timestamps()
   end
@@ -13,7 +14,7 @@ defmodule TestAutoform.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :age])
+    |> cast(attrs, [:name, :age, :biography])
     |> validate_required([:name, :age])
   end
 end

@@ -40,7 +40,8 @@ defmodule TestAutoform.Mixfile do
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"}
+      {:cowboy, "~> 1.0"},
+      {:fields, git: "https://github.com/dwyl/fields.git", tag: "0.1.3"}
     ]
   end
 
