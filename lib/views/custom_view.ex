@@ -15,6 +15,16 @@ defmodule Autoform.CustomView do
           Phoenix.HTML.Form.input_type(form, field)
       end
 
+    # Apply any sensible defaults here, but we should allow configuration of individual input options
+    opts =
+      Keyword.merge(
+        opts,
+        case schema.__schema__(:type, field) do
+          :float -> [step: 0.01]
+          _ -> []
+        end
+      )
+
     apply(Phoenix.HTML.Form, type, [String.to_existing_atom(name), field, opts])
   end
 end

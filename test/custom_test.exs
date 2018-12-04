@@ -92,4 +92,16 @@ defmodule CustomTest do
       assert response =~ "textarea"
     end
   end
+
+  describe "Product" do
+    test "renders number input with step of 0.01", %{conn: conn} do
+      assert response =
+               conn
+               |> get(custom_path(conn, :new_product))
+               |> html_response(200)
+
+      assert response =~ "type=\"number\""
+      assert response =~ "step=\"0.01\""
+    end
+  end
 end
