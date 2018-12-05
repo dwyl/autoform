@@ -4,7 +4,7 @@ defmodule Autoform.CustomView do
   import Phoenix.HTML.Form
   import Autoform.ErrorHelpers
 
-  def input(form, field, name, schema, opts) do
+  def input(form, field, schema, opts) do
     type =
       with "Elixir.Fields." <> field_type <- to_string(schema.__schema__(:type, field)),
            {:module, module} <- Code.ensure_loaded(Module.concat(Fields, field_type)),
@@ -19,12 +19,13 @@ defmodule Autoform.CustomView do
     opts =
       Keyword.merge(
         opts,
-        case schema.__schema__(:type, field) do
-          :float -> [step: 0.01]
-          _ -> []
-        end
+        [value: form.source.changes[field]] ++
+          case schema.__schema__(:type, field) do
+            :float -> [step: 0.01]
+            _ -> []
+          end
       )
 
-    apply(Phoenix.HTML.Form, type, [String.to_existing_atom(name), field, opts])
+    apply(Phoenix.HTML.Form, type, [form, field, opts])
   end
 end

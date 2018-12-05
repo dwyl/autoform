@@ -3,18 +3,36 @@
     <%= if html = Map.get(element, :html) do %>
       <%= html %>
     <% else %>
-      <%= for field <- element.fields do %>
-        <div class="form-group">
-          <%= if Map.has_key?(element, :input_first) && Enum.any?(element.input_first, &(&1 == field)) do %>
-            <%= input f, field, element.schema_name, element.schema, class: "form-control", required: (field in element.required), value: Map.get(@changeset.data, field) %>
-            <%= error_tag f, field %>
-            <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %><%=Map.get(element.custom_labels, field, humanize(field))%><% end %>
-          <% else %>
-            <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %><%=Map.get(element.custom_labels, field, humanize(field))%><% end %>
-            <%= input f, field, element.schema_name, element.schema, class: "form-control", required: (field in element.required), value: Map.get(@changeset.data, field) %>
-            <%= error_tag f, field %>
+      <%= if element.schema_name == "user" do %>
+        <%= inputs_for f, :user, fn p -> %>
+          <%= for field <- element.fields do %>
+            <div class="form-group">
+              <%= if Map.has_key?(element, :input_first) && Enum.any?(element.input_first, &(&1 == field)) do %>
+                <%= input p, field, element.schema, class: "form-control", required: (field in element.required), value: Map.get(@changeset.data, field) %>
+                <%= error_tag p, field %>
+                <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %><%=Map.get(element.custom_labels, field, humanize(field))%><% end %>
+              <% else %>
+                <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %><%=Map.get(element.custom_labels, field, humanize(field))%><% end %>
+                <%= input p, field, element.schema, class: "form-control", required: (field in element.required), value: Map.get(@changeset.data, field) %>
+                <%= error_tag p, field %>
+              <% end %>
+            </div>
           <% end %>
-        </div>
+        <% end %>
+      <% else %>
+        <%= for field <- element.fields do %>
+          <div class="form-group">
+            <%= if Map.has_key?(element, :input_first) && Enum.any?(element.input_first, &(&1 == field)) do %>
+              <%= input f, field, element.schema, class: "form-control", required: (field in element.required), value: Map.get(@changeset.data, field) %>
+              <%= error_tag f, field %>
+              <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %><%=Map.get(element.custom_labels, field, humanize(field))%><% end %>
+            <% else %>
+              <%= label String.to_existing_atom(element.schema_name), field, class: "control-label #{if field in element.required do "required" end}" do %><%=Map.get(element.custom_labels, field, humanize(field))%><% end %>
+              <%= input f, field, element.schema, class: "form-control", required: (field in element.required), value: Map.get(@changeset.data, field) %>
+              <%= error_tag f, field %>
+            <% end %>
+          </div>
+        <% end %>
       <% end %>
       <%= for assoc <- element.associations do %>
         <div class="form-group <%= assoc[:name] %>-group">
