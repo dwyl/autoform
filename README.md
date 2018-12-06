@@ -88,6 +88,8 @@ custom_render_autoform(conn, action, [{schema, opts}], options)
 
 If you don't want the associations to be rendered in your form, you can add them to your exclude list (see options `above`).
 
+If you are using the `custom_render_autoform` function and one of the schemas you pass in is an association of the `changeset`'s schema, it will be rendered within an `inputs_for` call, so your changes and any errors will be correctly rendered in the form.
+
 ### Fields
 
 This module can be used in conjuction with https://github.com/dwyl/fields.

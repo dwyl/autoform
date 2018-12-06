@@ -1,0 +1,13 @@
+<%= for field <- @element.fields do %>
+  <div class="form-group">
+    <%= if Map.has_key?(@element, :input_first) && Enum.any?(@element.input_first, &(&1 == field)) do %>
+      <%= input @f, field, @element.schema, class: "form-control", required: (field in @element.required), value: Map.get(@changeset.data, field) %>
+      <%= error_tag @f, field %>
+      <%= label @f, field, class: "control-label #{if field in @element.required do "required" end}" do %><%=Map.get(@element.custom_labels, field, humanize(field))%><% end %>
+    <% else %>
+      <%= label @f, field, class: "control-label #{if field in @element.required do "required" end}" do %><%=Map.get(@element.custom_labels, field, humanize(field))%><% end %>
+      <%= input @f, field, @element.schema, class: "form-control", required: (field in @element.required), value: Map.get(@changeset.data, field) %>
+      <%= error_tag @f, field %>
+    <% end %>
+  </div>
+<% end %>
