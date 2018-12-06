@@ -182,10 +182,13 @@ defmodule Autoform do
           Keyword.get(options, :assigns, [])
           |> Map.new()
           |> Map.put_new(:changeset, first_schema.changeset(struct(first_schema), %{}))
-          |> Map.merge(%{
-            elements: element_assigns,
-            action: Keyword.get(options, :path, path(conn, action, first_schema, options))
-          })
+          |> (fn m ->
+                Map.merge(m, %{
+                  elements: element_assigns,
+                  action: Keyword.get(options, :path, path(conn, action, first_schema, options)),
+                  assoc_list: Map.get(m, :changeset).data.__struct__.__schema__(:associations)
+                })
+              end).()
         )
       end
 
