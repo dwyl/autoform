@@ -33,4 +33,10 @@ defmodule Autoform.CustomView do
 
     apply(Phoenix.HTML.Form, type, [form, field, opts])
   end
+
+  def one_of(list_1, list_2) do
+    Enum.reduce(list_1, nil, fn el, acc ->
+      if el in list_2, do: el
+    end)
+  end
 end

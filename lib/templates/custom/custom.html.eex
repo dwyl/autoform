@@ -3,8 +3,8 @@
     <%= if html = Map.get(element, :html) do %>
       <%= html %>
     <% else %>
-      <%= if String.to_existing_atom(element.schema_name) in @assoc_list do %>
-        <%= inputs_for f, :user, fn p -> %>
+      <%= if assoc_schema = one_of([String.to_existing_atom(element.schema_name), String.to_existing_atom(element.schema_name <> "s")],  @assoc_list) do %>
+        <%= inputs_for f, assoc_schema, fn p -> %>
           <%= render "field_inputs.html", element: element, f: p, changeset: @changeset %>
         <% end %>
       <% else %>
