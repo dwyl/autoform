@@ -17,13 +17,18 @@ defmodule Autoform.CustomView do
 
     # Apply any sensible defaults here, but we should allow configuration of individual input options
     opts =
-      Keyword.merge(
-        opts,
-        [value: form.source.changes[field]] ++
-          case schema.__schema__(:type, field) do
-            :float -> [step: 0.01]
-            _ -> []
-          end
+      opts
+      |> Keyword.merge(
+        case schema.__schema__(:type, field) do
+          :float -> [step: 0.01]
+          _ -> []
+        end
+      )
+      |> Keyword.merge(
+        cond do
+          map_size(form.source.changes) > 0 -> [value: form.source.changes[field]]
+          true -> []
+        end
       )
 
     apply(Phoenix.HTML.Form, type, [form, field, opts])
