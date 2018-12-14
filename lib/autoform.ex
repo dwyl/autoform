@@ -219,7 +219,7 @@ defmodule Autoform do
 
         apply(
           String.to_existing_atom(web_name <> ".Router.Helpers"),
-          String.to_existing_atom(String.downcase(schema_name) <> "_path"),
+          String.to_existing_atom(Macro.underscore(schema_name) <> "_path"),
           [conn, action, path_data]
         )
       end
@@ -274,7 +274,7 @@ defmodule Autoform do
       end
 
       defp schema_name(schema) do
-        schema |> to_string() |> String.downcase() |> String.split(".") |> List.last()
+        schema |> to_string() |> String.split(".") |> List.last()
       end
     end
   end

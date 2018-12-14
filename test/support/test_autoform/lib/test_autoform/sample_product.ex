@@ -1,8 +1,8 @@
-defmodule TestAutoform.Product do
+defmodule TestAutoform.SampleProduct do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "products" do
+  schema "sample_products" do
     field(:price, :float)
 
     timestamps()
