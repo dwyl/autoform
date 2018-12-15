@@ -42,6 +42,6 @@
   <% end %>
 
   <div class="form-group">
-    <%= submit "Save", class: "btn btn-primary" %>
+    <%= submit @btn_txt, class: "btn btn-primary" %>
   </div>
 <% end %>

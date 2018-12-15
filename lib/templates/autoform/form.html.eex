@@ -15,10 +15,10 @@
     <div class="form-group <%= assoc[:name] %>-group">
       <%= label f, assoc[:name], class: "control-label #{if assoc[:name] in @required do "required" end}" %>
       <%= for a <- assoc[:associations] do %>
-        <input 
-          type="checkbox" 
+        <input
+          type="checkbox"
           id="<%=@schema_name%>_<%=assoc[:name]%>_<%=String.split(Map.get(a, :display)) |> Enum.join |> Macro.underscore()%>"
-          name="<%=@schema_name%>[<%=assoc[:name]%>][<%=String.to_atom(Map.get(a, :display))%>]" 
+          name="<%=@schema_name%>[<%=assoc[:name]%>][<%=String.to_atom(Map.get(a, :display))%>]"
           class="form-control"
           <%= if (Map.get(assoc.loaded_associations, assoc[:name]) || []) |> Enum.find(fn l -> Map.get(l, :name) == Map.get(a, :display) || Map.get(l, :type) == Map.get(a, :display) end) do "checked" end%>
           >
@@ -29,6 +29,6 @@
   <% end %>
 
   <div class="form-group">
-    <%= submit "Save", class: "btn btn-primary" %>
+    <%= submit @btn_txt, class: "btn btn-primary" %>
   </div>
 <% end %>
