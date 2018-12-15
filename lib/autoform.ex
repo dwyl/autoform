@@ -74,6 +74,7 @@ defmodule Autoform do
 
         assigns =
           assigns
+          |> submit_btn_txt()
           |> Enum.into(%{})
           |> Map.put_new(:changeset, schema.changeset(struct(schema), %{}))
           |> Map.put(:action, path(conn, action, schema, options))
@@ -180,6 +181,7 @@ defmodule Autoform do
           Autoform.CustomView,
           "custom.html",
           Keyword.get(options, :assigns, [])
+          |> submit_btn_txt()
           |> Map.new()
           |> Map.put_new(:changeset, first_schema.changeset(struct(first_schema), %{}))
           |> (fn m ->
@@ -276,6 +278,8 @@ defmodule Autoform do
       defp schema_name(schema) do
         schema |> to_string() |> String.downcase() |> String.split(".") |> List.last()
       end
+
+      defp submit_btn_txt(assigns), do: Keyword.put_new(assigns, :btn_txt, "Save")
     end
   end
 end

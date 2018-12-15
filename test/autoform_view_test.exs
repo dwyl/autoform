@@ -38,5 +38,11 @@ defmodule AutoformViewTest do
       refute h =~ "for=\"address_line_1\""
       assert t =~ "for=\"address_line_1\""
     end
+
+    test "Submit button text says Create", %{conn: conn} do
+      response = conn |> get(address_path(conn, :new)) |> html_response(200)
+
+      assert response =~ "Create"
+    end
   end
 end

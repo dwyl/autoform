@@ -1,3 +1,3 @@
 <h1>Addresses</h1>
 
-<%= render_autoform @conn, :create, TestAutoform.Address, assigns: [changeset: @changeset], exclude: [:line_1] %>
+<%= render_autoform @conn, :create, TestAutoform.Address, assigns: [changeset: @changeset, btn_txt: "Create"], exclude: [:line_1] %>
