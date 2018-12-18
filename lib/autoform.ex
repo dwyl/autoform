@@ -41,6 +41,7 @@ defmodule Autoform do
           * `:exclude` - A list of any fields in your schema you don't want to display on the form
           * `:update_field` - The field from your schema you want to use in your update path (/users/some-id), defaults to id
           * `:assoc_query` - An ecto query you want to use when loading your associations
+          * `:btn_txt` - A string that will be used in the form submission button
 
       """
       @spec render_autoform(
@@ -74,6 +75,7 @@ defmodule Autoform do
 
         assigns =
           assigns
+          |> submit_btn_txt(options)
           |> Enum.into(%{})
           |> Map.put_new(:changeset, schema.changeset(struct(schema), %{}))
           |> Map.put(:action, path(conn, action, schema, options))
@@ -115,6 +117,7 @@ defmodule Autoform do
           * `:update_field` - The field from your schema you want to use in your update path (/users/some-id), defaults to id
           * `:assoc_query` - An ecto query you want to use when loading your associations
           * `:path` - The endpoint you want your form to post to. Defaults using the calling modules schema name plus :update_field. If you are rendering multiple schemas, you will almost certainly need to use this field
+          * `:btn_txt` - A string that will be used in the form submission button
 
       """
       @spec custom_render_autoform(
@@ -180,6 +183,7 @@ defmodule Autoform do
           Autoform.CustomView,
           "custom.html",
           Keyword.get(options, :assigns, [])
+          |> submit_btn_txt(options)
           |> Map.new()
           |> Map.put_new(:changeset, first_schema.changeset(struct(first_schema), %{}))
           |> (fn m ->
@@ -275,6 +279,11 @@ defmodule Autoform do
 
       defp schema_name(schema) do
         schema |> to_string() |> String.split(".") |> List.last()
+      end
+
+      defp submit_btn_txt(assigns, options) do
+        btn_txt_str = Keyword.get(options, :btn_txt, "Save")
+        Keyword.put_new(assigns, :btn_txt, btn_txt_str)
       end
     end
   end
