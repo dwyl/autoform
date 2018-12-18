@@ -1,1 +1,0 @@
-<%= custom_render_autoform(@conn, :create, [TestAutoform.Product]) %>

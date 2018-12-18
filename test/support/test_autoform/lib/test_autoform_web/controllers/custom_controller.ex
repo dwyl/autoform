@@ -1,6 +1,6 @@
 defmodule TestAutoformWeb.CustomController do
   use TestAutoformWeb, :controller
-  alias TestAutoform.{Address, Product}
+  alias TestAutoform.{Address, SampleProduct}
 
   def new(conn, _params) do
     changeset = Address.changeset(%Address{}, %{})
@@ -15,8 +15,8 @@ defmodule TestAutoformWeb.CustomController do
   end
 
   def new_product(conn, _params) do
-    changeset = Product.changeset(%Product{}, %{})
+    changeset = SampleProduct.changeset(%SampleProduct{}, %{})
 
-    render(conn, "new_product.html", changeset: changeset)
+    render(conn, "new_sample_product.html", changeset: changeset)
   end
 end
