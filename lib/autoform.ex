@@ -278,7 +278,7 @@ defmodule Autoform do
       end
 
       defp schema_name(schema) do
-        schema |> to_string() |> Macro.underscore() |>String.split(".") |> List.last()
+        schema |> to_string() |> String.downcase() | String.split(".") |> List.last()
       end
 
       defp submit_btn_txt(assigns, options) do
