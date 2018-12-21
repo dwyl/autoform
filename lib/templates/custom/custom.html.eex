@@ -19,7 +19,7 @@
                 <option value="<%=String.to_atom(Map.get(a, :display))%>"
                   <%= if (Map.get(assoc.loaded_associations, assoc[:name]) || %{}) |> Map.get(:name) == Map.get(a, :display) do "selected" end%>
                 >
-                  <%= Map.get(a, :display) |> String.capitalize() %>
+                  <%= Map.get(a, :display) %>
                 </option>
               <% end %>
             </select>
@@ -32,7 +32,7 @@
                 class="form-control"
                 <%= if (Map.get(assoc.loaded_associations, assoc[:name]) || []) |> Enum.find(fn l -> Map.get(l, :name) == Map.get(a, :display) || Map.get(l, :type) == Map.get(a, :display) end) do "checked" end%>
                 >
-              <label for="<%=element.schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :display))%>"><%= Map.get(a, :display) |> String.capitalize() %></label>
+              <label for="<%=element.schema_name%>_<%=assoc[:name]%>_<%=String.to_atom(Map.get(a, :display))%>"><%= Map.get(a, :display) %></label>
             <% end %>
           <% end %>
           <%= error_tag f, assoc[:name] %>
