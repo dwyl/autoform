@@ -278,15 +278,7 @@ defmodule Autoform do
       end
 
       defp schema_name(schema) do
-        IO.inspect "*************************"
-        IO.inspect schema
-        IO.inspect "*************************"
-        IO.inspect schema |> to_string() |> String.downcase() |> String.split(".") |> List.last()
-        IO.inspect "*************************"
-        IO.inspect "*************************"
-
-        name = schema |> to_string() |> String.downcase() |> String.split(".") |> List.last()
-        name <> "modtest"
+        schema |> to_string() |> String.split(".") |> List.last() |> Macro.underscore()
       end
 
       defp submit_btn_txt(assigns, options) do
