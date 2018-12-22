@@ -71,5 +71,14 @@ defmodule AutoformControllerTest do
 
       refute response =~ "age"
     end
+
+    test "multipe words schema", %{conn: conn} do
+      assert response =
+               conn
+               |> get(do_what_you_love_path(conn, :new))
+               |> html_response(200)
+
+      assert response =~ "do_what_you_love_name"
+    end
   end
 end

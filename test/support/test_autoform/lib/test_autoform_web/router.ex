@@ -23,6 +23,7 @@ defmodule TestAutoformWeb.Router do
     resources("/sample_products", SampleProductController)
     get("/custom_no_path", CustomController, :new_no_path)
     get("/custom_new_product", CustomController, :new_product)
+    resources("/do_what_you_love", DoWhatYouLoveController)
   end
 
   # Other scopes may use custom stacks.
