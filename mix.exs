@@ -34,7 +34,7 @@ defmodule Autoform.MixProject do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:cowboy, "~> 1.0"},
       {:gettext, "~> 0.11"},
-      {:fields, git: "https://github.com/dwyl/fields.git", tag: "0.1.5"}
+      {:fields, git: "https://github.com/dwyl/fields.git", tag: "0.1.6"}
     ]
   end
 end
