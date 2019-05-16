@@ -4,8 +4,8 @@ defmodule Autoform.MixProject do
   def project do
     [
       app: :autoform,
-      version: "0.6.6",
-      elixir: "~> 1.7",
+      version: "0.6.7",
+      elixir: "~> 1.8",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
@@ -34,7 +34,7 @@ defmodule Autoform.MixProject do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:cowboy, "~> 1.0"},
       {:gettext, "~> 0.11"},
-      {:fields, git: "https://github.com/dwyl/fields.git", tag: "0.1.6"}
+      {:fields, git: "https://github.com/dwyl/fields.git", tag: "0.1.7"}
     ]
   end
 end
