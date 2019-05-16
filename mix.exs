@@ -4,7 +4,7 @@ defmodule Autoform.MixProject do
   def project do
     [
       app: :autoform,
-      version: "0.6.5",
+      version: "0.6.6",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
